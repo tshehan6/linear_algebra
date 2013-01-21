@@ -112,7 +112,6 @@ class Matrix:
 			e = m[0][0]
 		except:
 			raise MatrixMalformedError(m)
-
 		# make sure every row has the same number of columns and that all elements are numbers
 		# this is not very elegant
 		num_columns = len(m[0])

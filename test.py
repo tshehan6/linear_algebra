@@ -36,7 +36,9 @@ class MatrixInitFromMalformed(unittest.TestCase):
 
 		d = [[1,2,3],[4,5,6],[7,8,9,10]]
 
-		self.malformed_matrices = [a,b,c,d]
+		e = []
+
+		self.malformed_matrices = [a,b,c,d,e]
 
 	def test_raises_exception(self):
 		for malformed in self.malformed_matrices:
