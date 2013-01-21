@@ -365,6 +365,11 @@ class Matrix:
 	# inverse matrix
 	def inverse(self):
 
+		# first make sure the matrix is square
+		if self.num_rows() != self.num_columns():
+			raise MatrixNotSquareError(self.m)
+			
+
 		i = Matrix.identity(self.num_rows())	
 		b = self.augment(i)
 		c = b.reduced_row_echelon()
