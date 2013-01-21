@@ -143,7 +143,11 @@ class Matrix:
 		s = ''
 		for row in self.m:
 			for  item in row:
-				s += str(item) + ' '
+				if(item == 0.0):
+					item = 0
+				if(item % 1 == 0):
+					item = round(item)
+				s += str(round(item,3)) + ' '
 			s += '\n'
 		return s
 
