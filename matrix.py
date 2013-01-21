@@ -29,6 +29,12 @@ class MatrixMalformedError(Exception):
 	def __repr__(self):
 		str(self.a)
 
+class MatrixBadStringError(Exception):
+	def __init__(self,a):
+		self.a = a
+	def __repr__(self):
+		str(self.a)
+
 class MatrixInvalidSizeError(Exception):
 	def __init__(self,m,n):
 		self.m = m
@@ -76,15 +82,19 @@ class Matrix:
 	def __init__(self,m):
 	
 		def from_string(s):
+
+			# make sure the string contains nothing but newline,colon,pipe,comma,space,period,number
+			if not re.match('^[\n\r:\| \t,.0-9\\-]*$',s):
+				raise MatrixBadStringError(s)
+
 			m = []
-			for row in iter(re.split('\n|:|\|',s)):
-	
+			for row in iter(re.split('\n|\r|:|\|',s)):
 				row = row.strip()
 				if row == '':
 					continue
 	
 				r = []
-				for column in iter(re.split('[ |\t|,]*',row)):
+				for column in iter(re.split('[ \t,]*',row)):
 					if column == '':
 						continue
 	
@@ -123,7 +133,12 @@ class Matrix:
 
 	# get a string representation
 	def __repr__(self):
-		return str(self.m)
+		s = ''
+		for row in self.m:
+			for  item in row:
+				s += str(item) + ' '
+			s += '\n'
+		return s
 
 	# get the matrix as a raw two dimensional list
 	def get_list(self):
@@ -339,7 +354,7 @@ class Matrix:
 	# inverse matrix
 	def inverse(self):
 
-		i = Matrix.identity(self.num_columns())	
+		i = Matrix.identity(self.num_rows())	
 		b = self.augment(i)
 		c = b.reduced_row_echelon()
 		
@@ -347,14 +362,14 @@ class Matrix:
 		for row in range(self.num_rows()):
 			for column in range(self.num_columns()):
 				if(i[row][column] != singularity_test[row][column]):
-					raise MatrixSingularError()
+					raise MatrixSingularError(self.m)
 		return c.right(self.num_rows())
 
 
 ############################
 # Example use of the library
 ############################
-
+'''
 a = Matrix("""
 	2 0  1
 	2 3 -4
@@ -391,4 +406,4 @@ print('')
 print('difference of b and a: ')
 f = c.subtract(a)
 print(f)
-print('')
+print('') '''
