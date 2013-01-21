@@ -107,9 +107,17 @@ class Matrix:
 		if isinstance(m,str):
 			m = from_string(m)
 
+		# make sure there is atleast one element
+		try:
+			e = m[0][0]
+		except:
+			raise MatrixMalformedError(m)
+
 		# make sure every row has the same number of columns and that all elements are numbers
 		# this is not very elegant
 		num_columns = len(m[0])
+		if(num_columns == 0):
+			raise MatrixMalformedError(m)
 		for row in m:
 			for element in row:
 				if not(	hasattr(element,"__truediv__") and 
