@@ -21,46 +21,20 @@ Contact Information:
 
 """
 import re
-
+import copy
 
 class MatrixMalformedError(Exception):
-	def __init__(self,a):
-		self.a = a
-	def __repr__(self):
-		str(self.a)
-
+	pass
 class MatrixBadStringError(Exception):
-	def __init__(self,a):
-		self.a = a
-	def __repr__(self):
-		str(self.a)
-
+	pass
 class MatrixInvalidSizeError(Exception):
-	def __init__(self,m,n):
-		self.m = m
-		self.n = n
-	def __repr__(self):
-		str((m,n))
-
+	pass
 class MatrixDimensionMismatchError(Exception):
-	def __init__(self,a,b):
-		self.a = b
-	def __repr__(self):
-		"A: " + str(self.a) + "\nB: " + str(self.b)
-
+	pass
 class MatrixSingularError(Exception):
-	def __init__(self,a):
-		self.a = a
-	def __repr__(self):
-		str(self.a)
-
+	pass
 class MatrixNotSquareError(Exception):
-	def __init__(self,a):
-		self.a = a
-	def __repr__(self):
-		str(self.a)
-
-import copy
+	pass
 
 # matrix
 class Matrix:
@@ -70,7 +44,7 @@ class Matrix:
 
 		# make sure n is a natural number
 		if not(n >= 0 and n % 1 == 0):
-			raise MatrixInvalidSizeError(n,n)
+			raise MatrixInvalidSizeError()
 
 		# construct the matrix
 		a = []
@@ -85,7 +59,7 @@ class Matrix:
 
 			# make sure the string contains nothing but newline,colon,pipe,comma,space,period,number
 			if not re.match('^[\n\r:\| \t,.0-9\\-]*$',s):
-				raise MatrixBadStringError(s)
+				raise MatrixBadStringError()
 
 			m = []
 			for row in iter(re.split('\n|\r|:|\|',s)):
@@ -111,22 +85,22 @@ class Matrix:
 		try:
 			e = m[0][0]
 		except:
-			raise MatrixMalformedError(m)
+			raise MatrixMalformedError()
 		# make sure every row has the same number of columns and that all elements are numbers
 		# this is not very elegant
 		num_columns = len(m[0])
 		if(num_columns == 0):
-			raise MatrixMalformedError(m)
+			raise MatrixMalformedError()
 		for row in m:
 			for element in row:
 				if not(	hasattr(element,"__truediv__") and 
 					hasattr(element,"__mul__") and 
 					hasattr(element,"__add__")):
 
-					raise MatrixMalformedError(m) 
+					raise MatrixMalformedError() 
 
 			if(len(row) != num_columns):
-				raise MatrixMalformedError(m) 
+				raise MatrixMalformedError() 
 
 		# set the matrix
 		self.m = m
@@ -240,7 +214,7 @@ class Matrix:
 	def add(self,other):
 
 		if(self.num_rows() != other.num_rows() or self.num_columns() != other.num_columns() ):
-			raise MatrixDimensionMismatchError(self,other)
+			raise MatrixDimensionMismatchError()
 
 		new = [	[self[i][j] + other[i][j] 
 				for j in range(self.num_columns())] 
@@ -250,7 +224,7 @@ class Matrix:
 	#  matrix subtraction
 	def subtract(self,other):
 		if(self.num_rows() != other.num_rows() or self.num_columns() != other.num_columns() ):
-			raise MatrixDimensionMismatchError(self,other)
+			raise MatrixDimensionMismatchError()
 
 		new = [	[self[i][j] - other[i][j] 
 				for j in range(self.num_columns())] 
@@ -274,7 +248,7 @@ class Matrix:
 			return running_sum
 
 		if(self.num_columns() != other.num_rows()):
-			raise MatrixDimensionMismatchError(self,other)
+			raise MatrixDimensionMismatchError()
 
 		new =[[	dot_product(self.row(i).flatten(),other.column(j).flatten()) 
 				for j in range(other.num_columns())]
@@ -285,7 +259,7 @@ class Matrix:
 	def augment(self,other):
 
 		if self.num_rows() != other.num_rows():
-			raise MatrixDimensionMismatchError(self,other)
+			raise MatrixDimensionMismatchError()
 
 		new = [  [self[i][j] for j in range(self.num_columns())] 
 			+[other[i][j] for j in range(other.num_columns())]
@@ -297,7 +271,7 @@ class Matrix:
 	def left(self,n):
 		# make sure n is a natural number
 		if not n >=0 and n % 1 == 0 :
-			raise MatrixInvalidSizeError(self.num_rows(),n)
+			raise MatrixInvalidSizeError()
 
 		new = [self[i][:n] for i in range(self.num_rows())]
 		return Matrix(new)
@@ -306,7 +280,7 @@ class Matrix:
 	def right(self,n):
 		# make sure n is a natural number
 		if not n >=0 and n % 1 == 0 :
-			raise MatrixInvalidSizeError(self.num_rows(),n)
+			raise MatrixInvalidSizeError()
 
 		new = [self[i][n:] for i in range(self.num_rows())]
 		return Matrix(new)
@@ -367,7 +341,7 @@ class Matrix:
 
 		# first make sure the matrix is square
 		if self.num_rows() != self.num_columns():
-			raise MatrixNotSquareError(self.m)
+			raise MatrixNotSquareError()
 			
 
 		i = Matrix.identity(self.num_rows())	
@@ -378,7 +352,7 @@ class Matrix:
 		for row in range(self.num_rows()):
 			for column in range(self.num_columns()):
 				if(i[row][column] != singularity_test[row][column]):
-					raise MatrixSingularError(self.m)
+					raise MatrixSingularError()
 		return c.right(self.num_rows())
 
 
